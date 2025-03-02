@@ -1,0 +1,93 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0;
+  text-align: center;
+}
+
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.battle-area {
+  display: flex;
+  justify-content: space-around;
+  margin: 20px 0;
+}
+
+.pokemon {
+  text-align: center;
+}
+
+.pokemon-image {
+  width: 100px;
+  height: 100px;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.battle-log {
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #e0e0e0;
+  border-radius: 5px;
+  height: 100px;
+  overflow-y: auto;
+  text-align: left;
+}
+
+/* Attack animation */
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-10px); }
+  50% { transform: translateX(10px); }
+  75% { transform: translateX(-10px); }
+  100% { transform: translateX(0); }
+}
+
+.attack-animation {
+  animation: shake 0.5s ease-in-out;
+}
+
+/* Damage animation */
+@keyframes flash {
+  0% { opacity: 1; }
+  50% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.damage-animation {
+  animation: flash 0.3s ease-in-out;
+}
+
+/* Victory animation */
+@keyframes bounce {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+  100% { transform: translateY(0); }
+}
+
+.victory-animation {
+  animation: bounce 0.5s ease-in-out infinite;
+}
