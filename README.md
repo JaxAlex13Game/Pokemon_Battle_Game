@@ -1,2 +1,2 @@
 This is a game that you see 2 random Pokemon fight.
-To play download the index.html, styles.css, and script.js files.
+To play: https://jaxalex13game.github.io/Pokemon_Battle_Game1/
