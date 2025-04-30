@@ -1,28 +1,52 @@
-// Add this at the beginning of your script.js
+// Music Control
+const themeMusic = document.getElementById("pokemon-theme");
+const musicToggle = document.getElementById("music-toggle");
+let isMusicPlaying = false;
 
-// Title Screen Functionality
-const titleScreen = document.getElementById("title-screen");
-const gameScreen = document.getElementById("game-screen");
-const startGameBtn = document.getElementById("start-game");
-const howToPlayBtnTitle = document.getElementById("how-to-play-btn");
-
-startGameBtn.addEventListener("click", () => {
-  titleScreen.style.display = "none";
-  gameScreen.style.display = "block";
+// Try to autoplay when page loads
+window.addEventListener('DOMContentLoaded', () => {
+  themeMusic.volume = 0.3;
+  const playPromise = themeMusic.play();
   
-  // Initialize game with random Pokémon
-  const [initialPokemon1, initialPokemon2] = getTwoUniquePokemon();
-  currentPokemon1 = { ...initialPokemon1 };
-  currentPokemon2 = { ...initialPokemon2 };
-  displayPokemon(currentPokemon1, pokemon1Element);
-  displayPokemon(currentPokemon2, pokemon2Element);
+  if (playPromise !== undefined) {
+    playPromise.catch(error => {
+      // Auto-play was prevented, show muted icon
+      musicToggle.textContent = "🔇";
+      isMusicPlaying = false;
+    }).then(() => {
+      // Auto-play worked
+      musicToggle.textContent = "🔊";
+      isMusicPlaying = true;
+    });
+  }
 });
 
-howToPlayBtnTitle.addEventListener("click", () => {
-  modal.style.display = "block";
+// Toggle music on/off
+musicToggle.addEventListener("click", () => {
+  if (isMusicPlaying) {
+    themeMusic.pause();
+    musicToggle.textContent = "🔇";
+  } else {
+    themeMusic.play();
+    musicToggle.textContent = "🔊";
+  }
+  isMusicPlaying = !isMusicPlaying;
 });
 
-// The rest of your existing JavaScript code remains the same...
+// Enable music on any user interaction
+document.addEventListener('click', enableAudio, { once: true });
+document.addEventListener('keydown', enableAudio, { once: true });
+
+function enableAudio() {
+  if (!isMusicPlaying) {
+    themeMusic.play()
+      .then(() => {
+        musicToggle.textContent = "🔊";
+        isMusicPlaying = true;
+      })
+      .catch(e => console.log("Audio play failed:", e));
+  }
+}
 // Type effectiveness chart
 const typeEffectiveness = {
   normal: { rock: 0.5, ghost: 0, steel: 0.5 },
@@ -46,7 +70,6 @@ const typeEffectiveness = {
 };
 
 // Pokémon data
-// Sample Pokémon data
 const pokemonList = [
   { name: "Bulbasaur", hp: 68, types: ["grass", "poison"], image: "https://img.pokemondb.net/sprites/black-white/anim/normal/bulbasaur.gif" },
   { name: "Ivysaur", hp: 97, types: ["grass", "poison"], image: "https://img.pokemondb.net/sprites/black-white/anim/normal/ivysaur.gif" },
@@ -199,7 +222,158 @@ const pokemonList = [
   { name: "Dragonite", hp: 118, types: ["dragon", "flying"], image: "https://img.pokemondb.net/sprites/black-white/anim/normal/dragonite.gif" },
   { name: "Mewtwo", hp: 136, types: ["psychic"], image: "https://img.pokemondb.net/sprites/black-white/anim/normal/mewtwo.gif" },
   { name: "Mew", hp: 134, types: ["psychic"], image: "https://img.pokemondb.net/sprites/black-white/anim/normal/mew.gif" },
-  ]; 
+  { name: "Bulbasaur", hp: 68, types: ["grass", "poison"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/bulbasaur.gif" },
+  { name: "Ivysaur", hp: 97, types: ["grass", "poison"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/ivysaur.gif" },
+  { name: "Venusaur", hp: 134, types: ["grass", "poison"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/venusaur.gif" },
+  { name: "Charmander", hp: 65, types: ["fire"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/charmander.gif" },
+  { name: "Charmeleon", hp: 95, types: ["fire"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/charmeleon.gif" },
+  { name: "Charizard", hp: 129, types: ["fire", "flying"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/charizard.gif" },
+  { name: "Squirtle", hp: 61, types: ["water"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/squirtle.gif" },
+  { name: "Wartortle", hp: 84, types: ["water"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/wartortle.gif" },
+  { name: "Blastoise", hp: 131, types: ["water"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/blastoise.gif" },
+  { name: "Caterpie", hp: 55, types: ["bug"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/caterpie.gif"},
+  { name: "Metapod", hp: 65, types: ["bug"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/metapod.gif"},
+  { name: "Butterfree", hp: 84, types: ["bug", "flying"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/butterfree.gif"},
+  { name: "Weedle", hp: 43, types: ["bug", "poison"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/weedle.gif"},
+  { name: "Kakuna", hp: 51, types: ["bug", "poison"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/kakuna.gif"},
+  { name: "Beedrill", hp: 83, types: ["bug", "poison"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/beedrill.gif"},
+  { name: "Pidgey", hp: 55, types: ["normal", "flying"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/pidgey.gif"},
+  { name: "Pidgeotto", hp: 78, types: ["normal", "flying"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/pidgeotto.gif"},
+  { name: "Pidgeot", hp: 118, types: ["normal", "flying"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/pidgeot.gif"},
+  { name: "Rattata", hp: 51, types: ["normal"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/rattata.gif"},
+  { name: "Raticate", hp: 78, types: ["normal"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/raticate.gif"},
+  { name: "Spearow", hp: 58, types: ["normal", "flying"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/spearow.gif"},
+  { name: "Fearow", hp: 106, types: ["normal", "flying"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/fearow.gif"},
+  { name: "Ekans", hp: 61, types: ["poison"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/ekans.gif"},
+  { name: "Arbok", hp: 86, types: ["poison"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/arbok.gif"},
+  { name: "Pikachu", hp: 56, types: ["electric"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/pikachu.gif"},
+  { name: "Raichu", hp: 94, types: ["electric"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/raichu.gif"},
+  { name: "Sandshrew", hp: 61, types: ["ground"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/sandshrew.gif"},
+  { name: "Sandslash", hp: 90, types: ["ground"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/sandslash.gif"},
+  { name: "Nidoran(Female)", hp: 64, types: ["poison"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/nidoran-f.gif"},
+  { name: "Nidorina", hp: 88, types: ["poison"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/nidorina.gif"},
+  { name: "Nidoqueen", hp: 114, types: ["poison", "ground"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/nidoqueen.gif"},
+  { name: "Nidoran(Male)", hp: 62, types: ["poison"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/nidoran-m.gif"},
+  { name: "Nidorino", hp: 90, types: ["poison"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/nidorino.gif"},
+  { name: "Nidoking", hp: 116, types: ["poison", "ground"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/nidoking.gif"},
+  { name: "Clefairy", hp: 81, types: ["fairy"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/clefairy.gif"},
+  { name: "Clefable", hp: 128, types: ["fairy"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/clefable.gif"},
+  { name: "Vulpix", hp: 61, types: ["fire"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/vulpix.gif"},
+  { name: "Ninetales", hp: 90, types: ["fire"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/ninetales.gif"},
+  { name: "Jigglypuff", hp: 118, types: ["normal", "fairy"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/jigglypuff.gif" },
+  { name: "Wigglytuff", hp: 150, types: ["normal", "fairy"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/wigglytuff.gif" },
+  { name: "Zubat", hp: 53, types: ["poison", "flying"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/zubat.gif"},
+  { name: "Golbat", hp: 83, types: ["poison", "flying"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/golbat.gif"},
+  { name: "Oddish", hp: 61, types: ["grass", "poison"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/oddish.gif"},
+  { name: "Gloom", hp: 81, types: ["grass", "poison"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/gloom.gif"},
+  { name: "Vileplume", hp: 102, types: ["grass", "poison"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/vileplume.gif"},
+  { name: "Paras", hp: 54, types: ["bug", "grass"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/paras.gif"},
+  { name: "Parasect", hp: 76, types: ["bug", "grass"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/parasect.gif"},
+  { name: "Venonat", hp: 79, types: ["bug", "poison"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/venonat.gif"},
+  { name: "Venomoth", hp: 101, types: ["bug", "poison"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/venomoth.gif"},
+  { name: "Diglett", hp: 42, types: ["ground"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/diglett.gif"},
+  { name: "Dugtrio", hp: 66, types: ["ground"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/dugtrio.gif"},
+  { name: "Meowth", hp: 59, types: ["normal"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/meowth.gif" },
+  { name: "Persian", hp: 83, types: ["normal"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/persian.gif" },
+  { name: "Psyduck", hp: 67, types: ["water"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/psyduck.gif" },
+  { name: "Golduck", hp: 102, types: ["water"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/golduck.gif" },
+  { name: "Mankey", hp: 69, types: ["fighting"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/mankey.gif"},
+  { name: "Primeape", hp: 97, types: ["fighting"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/primeape.gif"},
+  { name: "Growlithe", hp: 66, types: ["fire"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/growlithe.gif"},
+  { name: "Arcanine", hp: 113, types: ["fire"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/arcanine.gif" },
+  { name: "Poliwag", hp: 70, types: ["water"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/poliwag.gif"},
+  { name: "Poliwhirl", hp: 91, types: ["water"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/poliwhirl.gif"},
+  { name: "Poliwrath", hp: 121, types: ["water", "fighting"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/poliwrath.gif"},
+  { name: "Abra", hp: 50, types: ["psychic"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/abra.gif"},
+  { name: "Kadabra", hp: 70, types: ["psychic"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/kadabra.gif" },
+  { name: "Alakazam", hp: 90, types: ["psychic"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/alakazam.gif" },
+  { name: "Machop", hp: 85, types: ["fighting"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/machop.gif" },
+  { name: "Machoke", hp: 95, types: ["fighting"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/machoke.gif" },
+  { name: "Machamp", hp: 125, types: ["fighting"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/machamp.gif" },
+  { name: "Bellsprout", hp: 74, types: ["grass", "poison"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/bellsprout.gif"},
+  { name: "Weepinbell", hp: 94, types: ["grass", "poison"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/weepinbell.gif"},
+  { name: "Victreebel", hp: 112, types: ["grass", "poison"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/victreebel.gif"},
+  { name: "Tentacool", hp: 73, types: ["water", "poison"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/tentacool.gif"},
+  { name: "Tentacruel", hp: 106, types: ["water", "poison"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/tentacruel.gif"},
+  { name: "Geodude", hp: 75, types: ["rock", "ground"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/geodude.gif"},
+  { name: "Graveler", hp: 88, types: ["rock", "ground"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/graveler.gif"},
+  { name: "Golem", hp: 103, types: ["rock", "ground"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/golem.gif"},
+  { name: "Ponyta", hp: 69, types: ["fire"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/ponyta.gif"},
+  { name: "Rapidash", hp: 87, types: ["fire"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/rapidash.gif"},
+  { name: "Slowpoke", hp: 124, types: ["water", "psychic"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/slowpoke.gif"},
+  { name: "Slowbro", hp: 140, types: ["water", "psychic"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/slowbro.gif"},
+  { name: "Magnemite", hp: 51, types: ["electric", "steel"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/magnemite.gif"},
+  { name: "Magneton", hp: 76, types: ["electric", "steel"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/magneton.gif"},
+  { name: "Farfetch'd", hp: 82, types: ["normal", "flying"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/farfetchd.gif"},
+  { name: "Doduo", hp: 67, types: ["normal", "flying"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/doduo.gif"},
+  { name: "Dodrio", hp: 90, types: ["normal", "flying"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/dodrio.gif"},
+  { name: "Seel", hp: 74, types: ["water"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/seel.gif"},
+  { name: "Dewgong", hp: 122, types: ["water", "ice"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/dewgong.gif"},
+  { name: "Grimer", hp: 108, types: ["poison"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/grimer.gif"},
+  { name: "Muk", hp: 126, types: ["poison"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/muk.gif"},
+  { name: "Shellder", hp: 62, types: ["water"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/shellder.gif"},
+  { name: "Cloyster", hp: 84, types: ["water", "ice"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/cloyster.gif"},
+  { name: "Gastly", hp: 62, types: ["ghost", "poison"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/gastly.gif" },
+  { name: "Haunter", hp: 79, types: ["ghost", "poison"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/haunter.gif" },
+  { name: "Gengar", hp: 95, types: ["ghost", "poison"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/gengar.gif" },
+  { name: "Onix", hp: 64, types: ["rock", "ground"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/onix.gif"},
+  { name: "Drowzee", hp: 74, types: ["psychic"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/drowzee.gif"},
+  { name: "Hypno", hp: 113, types: ["psychic"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/hypno.gif"},
+  { name: "Krabby", hp: 63, types: ["water"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/krabby.gif"},
+  { name: "Kingler", hp: 86, types: ["water"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/kingler.gif"},
+  { name: "Voltorb", hp: 73, types: ["electric"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/voltorb.gif"},
+  { name: "Electrode", hp: 92, types: ["electric"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/electrode.gif"},
+  { name: "Exeggcute", hp: 81, types: ["grass", "psychic"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/exeggcute.gif"},
+  { name: "Exeggutor", hp: 112, types: ["grass", "psychic"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/exeggutor.gif"},
+  { name: "Cubone", hp: 68, types: ["ground"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/cubone.gif"},
+  { name: "Marowak", hp: 91, types: ["ground"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/marowak.gif"},
+  { name: "Hitmonlee", hp: 81, types: ["fighting"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/hitmonlee.gif"},
+  { name: "Hitmonchan", hp: 84, types: ["fighting"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/hitmonchan.gif"},
+  { name: "Lickitung", hp: 117, types: ["normal"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/lickitung.gif"},
+  { name: "Koffing", hp: 64, types: ["poison"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/koffing.gif"},
+  { name: "Weezing", hp: 88, types: ["poison"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/weezing.gif"},
+  { name: "Rhyhorn", hp: 102, types: ["ground", "rock"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/rhyhorn.gif"},
+  { name: "Rhydon", hp: 134, types: ["ground", "rock"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/rhydon.gif"},
+  { name: "Chansey", hp: 227, types: ["normal"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/chansey.gif"},
+  { name: "Tangela", hp: 79, types: ["grass"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/tangela.gif"},
+  { name: "Kangaskhan", hp: 118, types: ["normal"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/kangaskhan.gif"},
+  { name: "Horsea", hp: 57, types: ["water"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/horsea.gif"},
+  { name: "Seadra", hp: 87 ,types: ["water"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/seadra.gif"},
+  { name: "Goldeen", hp: 54, types: ["water"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/goldeen.gif"},
+  { name: "Seaking", hp: 97, types: ["water"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/seaking.gif"},
+  { name: "Staryu", hp: 64, types: ["water"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/staryu.gif"},
+  { name: "Starmie", hp: 84, types: ["water", "psychic"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/starmie.gif"},
+  { name: "Mr. Mime", hp: 69, types: ["psychic", "fairy"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/mr-mime.gif"},
+  { name: "Scyther", hp: 83, types: ["bug", "flying"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/scyther.gif"},
+  { name: "Jynx", hp: 93, types: ["ice", "psychic"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/jynx.gif"},
+  { name: "Electabuzz", hp: 85, types: ["electric"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/electabuzz.gif"},
+  { name: "Magmar", hp: 90, types: ["fire"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/magmar.gif"},
+  { name: "Pinsir", hp: 87, types: ["bug"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/pinsir.gif"},
+  { name: "Tauros", hp: 103, types: ["normal"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/tauros.gif"},
+  { name: "Magikarp", hp: 45, types: ["water"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/magikarp.gif"},
+  { name: "Gyrados", hp: 123, types: ["water", "flying"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/gyarados.gif" },
+  { name: "Lapras", hp: 150, types: ["water", "ice"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/lapras.gif"},
+  { name: "Ditto", hp: 79, types: ["normal"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/ditto.gif"},
+  { name: "Eevee", hp: 86, types: ["normal"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/eevee.gif" },
+  { name: "Vaporeon", hp: 135, types: ["water"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/vaporeon.gif"},
+  { name: "Jolteon", hp: 86, types: ["electric"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/jolteon.gif"},
+  { name: "Flareon", hp: 99, types: ["fire"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/flareon.gif"},
+  { name: "Porygon", hp: 94, types: ["normal"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/porygon.gif"},
+  { name: "Omanyte", hp: 70, types: ["rock", "water"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/omanyte.gif"},
+  { name: "Omastar", hp: 100, types: ["rock", "water"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/omastar.gif"},
+  { name: "Kabuto", hp: 62, types: ["rock", "water"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/kabuto.gif"},
+  { name: "Kabutops", hp: 90, types: ["rock", "water"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/kaputops.gif"},
+  { name: "Aerodactyl", hp: 102, types: ["rock", "flying"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/aerodactyl.gif"},
+  { name: "Snorlax", hp: 182, types: ["normal"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/snorlax.gif" },
+  { name: "Articuno", hp: 124, types: ["ice", "flying"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/arcticuno.gif"},
+  { name: "Zapdos", hp: 121, types: ["electric", "flying"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/zapdos.gif"},
+  { name: "Moltres", hp: 123, types: ["fire", "flying"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/moltres.gif"},
+  { name: "Dratini", hp: 76, types: ["dragon"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/dratini.gif"},
+  { name: "Dragonair", hp: 94, types: ["dragon"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/dragonair.gif"},
+  { name: "Dragonite", hp: 118, types: ["dragon", "flying"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/dragonite.gif" },
+  { name: "Mewtwo", hp: 136, types: ["psychic"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/mewtwo.gif" },
+  { name: "Mew", hp: 134, types: ["psychic"], image: "https://img.pokemondb.net/sprites/black-white/anim/shiny/mew.gif" },
+];
 
 // DOM Elements
 const pokemon1Element = document.getElementById("pokemon1");
@@ -352,28 +526,7 @@ function endBattle(pokemon1, pokemon2) {
   // Re-enable start button
   startBattleButton.disabled = false;
 }
-// Add this to your existing JavaScript code, right before the event listeners section
 
-// How to Play Modal functionality
-const howToPlayBtn = document.getElementById("how-to-play");
-const modal = document.getElementById("how-to-play-modal");
-const span = document.getElementsByClassName("close")[0];
-
-howToPlayBtn.onclick = function() {
-  modal.style.display = "block";
-}
-
-span.onclick = function() {
-  modal.style.display = "none";
-}
-
-window.onclick = function(event) {
-  if (event.target == modal) {
-    modal.style.display = "none";
-  }
-}
-
-// The rest of your existing JavaScript code remains the same...
 // Event listeners
 startBattleButton.addEventListener("click", () => {
   // Stop any ongoing battle
